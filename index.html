@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZAQQQ STUREE STORE</title>
+
+<style>
+body {
+    font-family: Arial;
+    background: black;
+    color: white;
+    text-align: center;
+}
+
+h1 { color: cyan; }
+
+.card {
+    background: #111;
+    margin: 20px;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 0 15px cyan;
+}
+
+input, select {
+    width: 80%;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 10px;
+    border: none;
+}
+
+.btn {
+    padding: 12px 25px;
+    background: cyan;
+    border: none;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+img {
+    max-width: 150px;
+    margin-top: 10px;
+    border-radius: 10px;
+}
+.hidden { display:none; }
+</style>
+</head>
+
+<body>
+
+<h1>ZAQQQ STUREE</h1>
+<p>ORDER SEKARANG 🔥</p>
+
+<div class="card">
+    <h3>Form Order</h3>
+
+    <input type="text" id="nama" placeholder="Nama kamu"><br>
+
+    <select id="layanan" onchange="cekLayanan()">
+        <option value="">-- Pilih Layanan --</option>
+        <option value="JASTEB">JASTEB</option>
+        <option value="SUNTIK MEDIA">SUNTIK MEDIA</option>
+        <option value="PANEL JASTEB">PANEL JASTEB</option>
+    </select><br>
+
+    <input type="email" id="email" placeholder="Email Target" class="hidden"><br>
+
+    <input type="text" id="target" placeholder="Nomor / Username target"><br>
+    <input type="number" id="jumlah" placeholder="Jumlah order"><br>
+
+    <h4>Upload Bukti Pembayaran</h4>
+    <input type="file" id="bukti" accept="image/*" onchange="preview()"><br>
+    <img id="previewImg" class="hidden">
+
+    <button class="btn" onclick="order()">KIRIM ORDER</button>
+</div>
+
+<script>
+let base64Image = "";
+
+function cekLayanan() {
+    let layanan = document.getElementById("layanan").value;
+    let email = document.getElementById("email");
+
+    if (layanan === "JASTEB") {
+        email.classList.remove("hidden");
+    } else {
+        email.classList.add("hidden");
+    }
+}
+
+function preview() {
+    let file = document.getElementById("bukti").files[0];
+    let reader = new FileReader();
+
+    reader.onload = function(e) {
+        base64Image = e.target.result;
+        let img = document.getElementById("previewImg");
+        img.src = base64Image;
+        img.classList.remove("hidden");
+    }
+
+    if (file) reader.readAsDataURL(file);
+}
+
+function order() {
+    let nama = document.getElementById("nama").value;
+    let layanan = document.getElementById("layanan").value;
+    let email = document.getElementById("email").value;
+    let target = document.getElementById("target").value;
+    let jumlah = document.getElementById("jumlah").value;
+
+    if (!nama || !layanan || !target || !jumlah) {
+        alert("Isi semua data dulu!");
+        return;
+    }
+
+    if (layanan === "JASTEB" && !email) {
+        alert("Email wajib untuk JASTEB!");
+        return;
+    }
+
+    if (!base64Image) {
+        alert("Upload bukti pembayaran dulu!");
+        return;
+    }
+
+    let pesan = `Halo Admin ZAQQQ STUREE%0A%0A
+Nama: ${nama}%0A
+Layanan: ${layanan}%0A`;
+
+    if (layanan === "JASTEB") {
+        pesan += `Email: ${email}%0A`;
+    }
+
+    pesan += `Target: ${target}%0A
+Jumlah: ${jumlah}%0A
+Bukti: (lihat gambar di bawah)`;
+
+    window.open("https://wa.me/6283131335698?text=" + pesan);
+
+    // buka gambar di tab baru biar bisa dikirim manual
+    window.open(base64Image);
+}
+</script>
+
+</body>
+</html>
